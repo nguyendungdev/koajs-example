@@ -25,10 +25,10 @@ function getAll(limit, sort) {
 /**
  * 
  * @param {number} id 
- * @returns {number}
+ * @returns {}
  */
-function getIndexById(id) {
-    return products.findIndex(product => product.id === parseInt(id));
+function getById(id) {
+    return products.find(product => product.id === parseInt(id));
 }
 
 
@@ -37,8 +37,7 @@ function getIndexById(id) {
  * @param {{name:string,price:number,description:string,product:string,color:string,createAt:Date,image:string}} data 
  */
 function add(data) {
-    console.log(products[products.length - 1].id)
-    const updateProduct = [...products, { ...data, id: products[products.length - 1].id }];
+    const updateProduct = [...products, { ...data, id: (products[products.length - 1].id + 1) }];
     return fs.writeFileSync('./src/database/products.json', JSON.stringify(updateProduct, null, 4));
 }
 
@@ -47,7 +46,7 @@ function add(data) {
  * @param {number} id 
  */
 function deleteById(id) {
-    const deletedProducts = products.filter(product =>
+    const deletedProducts = products.filter((product) =>
         product.id !== parseInt(id)
     );
     return fs.writeFileSync('./src/database/products.json', JSON.stringify(deletedProducts, null, 4));
@@ -59,9 +58,13 @@ function deleteById(id) {
  * @param {number} index 
  * @param {{name:string,price:number,description:string,product:string,color:string,createAt:Date,image:string}} data 
  */
-function updateById(index, data) {
-    products[index] = { ...products[index], ...data, };
-    return fs.writeFileSync('./src/database/products.json', JSON.stringify(products, null, 4));
+function updateById(id, data) {
+    const newProducts = products.map((product) => {
+        return product.id === parseInt(id) ? data : product
+    });
+    console.log(newProducts)
+    // products[index] = { ...products[index], ...data, };
+    return fs.writeFileSync('./src/database/products.json', JSON.stringify(newProducts), null, 4);
 }
 
 /**
@@ -87,6 +90,6 @@ module.exports = {
     getAll,
     add,
     deleteById,
-    getIndexById,
+    getById,
     updateById,
 }

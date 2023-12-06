@@ -3,7 +3,7 @@ import {
     getOne as getOneProduct,
     add as addProduct,
     deleteById as deleteOneProduct,
-    getIndexById,
+    getById,
     updateById,
 } from "../../database/productRepository";
 
@@ -51,7 +51,7 @@ export async function getProduct(ctx) {
 export async function deleteProduct(ctx) {
     try {
         const { id } = ctx.params;
-        const product = getIndexById(id);
+        const product = getById(id);
         if (product) {
             deleteOneProduct(id);
             ctx.status = 201;
@@ -92,9 +92,9 @@ export async function updateProduct(ctx) {
     try {
         const { id } = ctx.params;
         const updateData = ctx.request.body;
-        const productIndex = getIndexById(id);
-        if (productIndex !== -1) {
-            updateById(productIndex, updateData);
+        const product = getById(id);
+        if (product) {
+            updateById(id, updateData);
             ctx.status = 201;
             return ctx.body = {
                 success: true
