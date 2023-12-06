@@ -73,7 +73,7 @@ export async function deleteProduct(ctx) {
 export async function save(ctx) {
     try {
         const postData = ctx.request.body;
-        addProduct({ ...postData, createAt: new Date(), id: getLastId() });
+        addProduct({ ...postData, createAt: new Date() });
         ctx.status = 201;
         return ctx.body = {
             success: true

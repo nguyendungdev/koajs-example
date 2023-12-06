@@ -37,7 +37,8 @@ function getIndexById(id) {
  * @param {{name:string,price:number,description:string,product:string,color:string,createAt:Date,image:string}} data 
  */
 function add(data) {
-    const updateProduct = [...products, { ...data, createAt: new Date(), id: products[products.length].id }];
+    console.log(products[products.length - 1].id)
+    const updateProduct = [...products, { ...data, id: products[products.length - 1].id }];
     return fs.writeFileSync('./src/database/products.json', JSON.stringify(updateProduct, null, 4));
 }
 
