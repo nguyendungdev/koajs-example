@@ -59,11 +59,13 @@ function deleteById(id) {
  * @param {{name:string,price:number,description:string,product:string,color:string,createAt:Date,image:string}} data 
  */
 function updateById(id, data) {
+    // todo  dùng find đc không ?
     const newProducts = products.map((product) => {
         return product.id === parseInt(id) ? data : product
     });
     console.log(newProducts)
     // products[index] = { ...products[index], ...data, };
+    // viết chỗ này thành hàm saveData đc không ?
     return fs.writeFileSync('./src/database/products.json', JSON.stringify(newProducts), null, 4);
 }
 
@@ -75,8 +77,10 @@ function updateById(id, data) {
  */
 function getOne(id, fields) {
     const product = products.find(product => product.id === parseInt(id))
+    //todo: viết chỗ này ra hàm riêng pickFields để có thể dùng ở nhiều chỗ khác ví dụ getById cũng cần pickFields thì sao đúng không =)) 
     if (fields.length) {
         let filterProduct = {}
+        // mình dung cái khác ngoài forEach đc không ? 
         fields.forEach((field) => {
             filterProduct[field] = product[field];
         })
