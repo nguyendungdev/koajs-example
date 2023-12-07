@@ -1,10 +1,10 @@
 import {
     getAll as getAllProducts,
-    getOne as getOneProduct,
     add as addProduct,
     deleteById as deleteOneProduct,
     getById,
     updateById,
+    pickField,
 } from "../../database/productRepository";
 
 export async function getProducts(ctx) {
@@ -29,16 +29,20 @@ export async function getProducts(ctx) {
 export async function getProduct(ctx) {
     try {
         const { id } = ctx.params;
-        let { fields } = ctx.query;
-        const listFields = fields.split(',');
-        const getCurrentProduct = getOneProduct(id, listFields);
-        if (getCurrentProduct) {
-            ctx.status = 201;
-            return ctx.body = {
-                data: getCurrentProduct
-            }
+        const { fields } = ctx.query;
+        let product = getById(id);
+        if (!product) {
+            throw new Error('No Product Found with the given id!')
         }
-        throw new Error('No Product Found with the given id!')
+        if (fields) {
+            const listFields = fields.split(',');
+            product = pickField(listFields, product);
+        }
+        ctx.status = 201;
+        return ctx.body = {
+            data: product
+        }
+
     } catch (e) {
         ctx.status = 404;
         return ctx.body = {
@@ -93,14 +97,14 @@ export async function updateProduct(ctx) {
         const { id } = ctx.params;
         const updateData = ctx.request.body;
         const product = getById(id);
-        if (product) {
-            updateById(id, updateData);
-            ctx.status = 201;
-            return ctx.body = {
-                success: true
-            }
+        if (!product) {
+            throw new Error(`Product with id : ${id} doesn't exists!`);
         }
-        throw new Error(`Product with id : ${id} doesn't exists!`)
+        updateById(id, { ...updateData });
+        ctx.status = 201;
+        return ctx.body = {
+            success: true
+        }
     }
     catch (e) {
         ctx.status = 404;

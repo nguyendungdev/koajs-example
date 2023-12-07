@@ -3,12 +3,20 @@ const products = require('./products.json');
 
 /**
  * 
+ * @param {[{id:number,name:string,price:number,description:string,product:string,color:string,createAt:Date,image:string}]} newProducts 
+ */
+function saveData(newProducts) {
+    return fs.writeFileSync('./src/database/products.json', JSON.stringify(newProducts), null, 4);
+}
+
+/**
+ * 
  * @param {number}limit 
  * @param {string} sort desc or asc
  * @returns {[{id:number,name:string,price:number,description:string,product:string,color:string,createAt:Date,image:string}]}
  */
 function getAll(limit, sort) {
-    let result = products
+    let result = [...products]
     if (sort) {
         result.sort((a, b) => {
             const sortCondition = sort.toLowerCase() === 'desc' ? 'desc' : 'asc';
@@ -25,7 +33,7 @@ function getAll(limit, sort) {
 /**
  * 
  * @param {number} id 
- * @returns {}
+ * @returns {[{id:number,name:string,price:number,description:string,product:string,color:string,createAt:Date,image:string}]}
  */
 function getById(id) {
     return products.find(product => product.id === parseInt(id));
@@ -38,7 +46,7 @@ function getById(id) {
  */
 function add(data) {
     const updateProduct = [...products, { ...data, id: (products[products.length - 1].id + 1) }];
-    return fs.writeFileSync('./src/database/products.json', JSON.stringify(updateProduct, null, 4));
+    return saveData(updateProduct);
 }
 
 /**
@@ -49,7 +57,7 @@ function deleteById(id) {
     const deletedProducts = products.filter((product) =>
         product.id !== parseInt(id)
     );
-    return fs.writeFileSync('./src/database/products.json', JSON.stringify(deletedProducts, null, 4));
+    return saveData(deletedProducts);
 
 }
 
@@ -59,38 +67,31 @@ function deleteById(id) {
  * @param {{name:string,price:number,description:string,product:string,color:string,createAt:Date,image:string}} data 
  */
 function updateById(id, data) {
-    // todo  dùng find đc không ?
     const newProducts = products.map((product) => {
         return product.id === parseInt(id) ? data : product
     });
-    console.log(newProducts)
-    // products[index] = { ...products[index], ...data, };
-    // viết chỗ này thành hàm saveData đc không ?
-    return fs.writeFileSync('./src/database/products.json', JSON.stringify(newProducts), null, 4);
+
+    return saveData(newProducts);
 }
 
 /**
  * 
- * @param {number} id 
  * @param {string[]} fields 
- * @returns {[{id:number,name:string,price:number,description:string,product:string,color:string,createAt:Date,image:string}]}
+ * @param {[{id:number,name:string,price:number,description:string,product:string,color:string,createAt:Date,image:string}]} product 
+ * @returns {{}}
  */
-function getOne(id, fields) {
-    const product = products.find(product => product.id === parseInt(id))
-    //todo: viết chỗ này ra hàm riêng pickFields để có thể dùng ở nhiều chỗ khác ví dụ getById cũng cần pickFields thì sao đúng không =)) 
-    if (fields.length) {
-        let filterProduct = {}
-        // mình dung cái khác ngoài forEach đc không ? 
-        fields.forEach((field) => {
-            filterProduct[field] = product[field];
-        })
-        return filterProduct;
-    }
-    return product;
+function pickField(fields, product) {
+    return fields.reduce((picked, field) => {
+        if (product.hasOwnProperty(field)) {
+            picked[field] = product[field];
+        }
+        return picked;
+    }, {});
 }
 
+
 module.exports = {
-    getOne,
+    pickField,
     getAll,
     add,
     deleteById,
