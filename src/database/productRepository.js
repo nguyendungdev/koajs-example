@@ -13,7 +13,7 @@ function saveData(newProducts) {
 /**
  * 
  * @param {{limit:number,sort:string}}query
- * @returns {[{id:number,name:string,price:number,description:string,product:string,color:string,createAt:Date,image:string}]}
+ * @returns {[{id:string,name:string,price:number,description:string,product:string,color:string,createAt:Date,image:string}]}
  */
 function getAll(query) {
     let result = [...products]
@@ -77,7 +77,7 @@ function updateById(id, data) {
 /**
  * 
  * @param {string[]} fields 
- * @param {[{id:number,name:string,price:number,description:string,product:string,color:string,createAt:Date,image:string}]} product 
+ * @param {[{id:string,name:string,price:number,description:string,product:string,color:string,createAt:Date,image:string}]} product 
  * @returns {{}}
  */
 function pickField(fields, product) {
