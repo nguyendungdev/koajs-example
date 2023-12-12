@@ -4,7 +4,7 @@ const faker = require('faker');
 
 /**
  * 
- * @param {[{id:number,name:string,price:number,description:string,product:string,color:string,createAt:Date,image:string}]} newProducts 
+ * @param {[{id:string,name:string,price:number,description:string,product:string,color:string,createAt:Date,image:string}]} newProducts 
  */
 function saveData(newProducts) {
     return fs.writeFileSync('./src/database/products.json', JSON.stringify(newProducts), null, 4);
