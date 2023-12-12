@@ -9,8 +9,8 @@ import {
 
 export async function getProducts(ctx) {
     try {
-        const { limit, sort } = ctx.query;
-        const products = getAllProducts(limit, sort);
+        const query = ctx.query;
+        const products = getAllProducts(query);
         if (products.length !== 0) {
             ctx.status = 201;
             return ctx.body = products;

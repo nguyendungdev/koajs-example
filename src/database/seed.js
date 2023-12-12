@@ -1,10 +1,9 @@
 const faker = require('faker');
 const fs = require('fs');
 
-let count = 1;
 const generateProduct = () => {
     return {
-        id: count++,
+        id: faker.datatype.uuid(),
         name: faker.commerce.productName(),
         price: faker.datatype.number({ min: 5, max: 1000, precision: 0.01 }),
         description: faker.lorem.sentence(),
