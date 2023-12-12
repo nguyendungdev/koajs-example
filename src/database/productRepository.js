@@ -17,15 +17,16 @@ function saveData(newProducts) {
  */
 function getAll(query) {
     let result = [...products]
-    if (query.sort) {
+    const { sort, limit } = query
+    if (sort) {
         result.sort((a, b) => {
-            const sortCondition = query.sort.toLowerCase() === 'desc' ? 'desc' : 'asc';
+            const sortCondition = sort.toLowerCase() === 'desc' ? 'desc' : 'asc';
             const orderBy = sortCondition === 'desc' ? -1 : 1;
             return orderBy * (new Date(a.createdAt) - new Date(b.createdAt));
         })
     }
-    if (query.limit) {
-        result = result.slice(0, parseInt(query.limit))
+    if (limit) {
+        result = result.slice(0, parseInt(limit))
     }
     return result;
 }
